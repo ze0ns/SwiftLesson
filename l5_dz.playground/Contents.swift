@@ -130,7 +130,7 @@ class trunkCar: car{
         
     }
  
-    init(ObemDvig: Double, massa: Double, Cvet: String, Marka: String, StatusWindows: String, StatusDvig: Double, SpeedOnSto: Double, CusovStatus : kuzov, MGruza: Mgruza){
+    init(ObemDvig: Double, massa: Double, Cvet: String, Marka: String, StatusWindows: String, StatusDvig: Double, CusovStatus : kuzov, MGruza: Mgruza){
         self.ObemDvig = ObemDvig
         self.massa = massa
         self.Cvet = Cvet
@@ -155,3 +155,16 @@ extension sportCar{
         print("Атомобиль марки \(Marka) \(Cvet) цвета. Разгоняется до 100 км/ч за \(SpeedOnSto) сек. ")
         }
 }
+
+
+var car1 = sportCar(ObemDvig: 2.3, massa: 2000, Cvet: "Red", Marka: "BMV", StatusWindows: "up", StatusDvig: 0, SpeedOnSto: 4)
+
+var car2 = trunkCar(ObemDvig: 4, massa: 40000, Cvet: "Blue", Marka: "Audi", StatusWindows: "down", StatusDvig: 1, CusovStatus: .pustKuz(empty: "Пустой"), MGruza: .Kuz(tonn: 20))
+
+
+car1.runDvig(action: 0)
+car2.actionDvig(action: 1)
+
+
+car1.decription()
+car2.decription()
