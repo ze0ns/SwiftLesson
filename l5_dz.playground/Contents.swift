@@ -33,6 +33,8 @@ extension car {
     }
 }
 
+
+// Класс спортивные автомобили
 class sportCar: car{
        var ObemDvig: Double
        var massa: Double
@@ -75,6 +77,9 @@ class sportCar: car{
        }
 
 }
+
+
+// Класс Грузовые автомобили
 class trunkCar: car{
        var ObemDvig: Double
        var massa: Double
@@ -136,4 +141,17 @@ class trunkCar: car{
         self.MGruza = MGruza
        }
 
+}
+
+extension trunkCar
+{
+     func decription(){
+            print("Атомобиль марки \(Marka) \(Cvet) цвета, Грузоподъемностью \(MGruza), В данный моент имеет статус кузова \(CusovStatus)")
+            }
+}
+
+extension sportCar{
+    func decription(){
+        print("Атомобиль марки \(Marka) \(Cvet) цвета. Разгоняется до 100 км/ч за \(SpeedOnSto) сек. ")
+        }
 }
