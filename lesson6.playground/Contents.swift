@@ -103,3 +103,36 @@ print(stackOfString.pop())
 //func someFunction <T: SomeClass, U: SomeProtocol>(some: T,someU: U){
 //    
 //}
+
+func findIndex(ofStrinf valueToFind: String, in array: [String]) -> Int?{
+    for (index, value) in array.enumerated(){
+        if value == valueToFind{
+            return index
+        }
+    }
+    return nil
+}
+
+var stringArray = ["кот","Собака","Курица"]
+
+if let foundIndex = findIndex(ofStrinf: "кот", in: stringArray){
+    print("Индекс \(foundIndex)")
+}
+
+
+// универсальный
+// Ограничиваем протоколом Equatable - который говорит свифту, что входящий параметры будет содержать равенство или не равенство
+func findIndexUniversal<T: Equatable>(ofStrinf valueToFind: T, in array: [T]) -> Int?{
+    for (index, value) in array.enumerated(){
+        if value == valueToFind {
+            return index
+        }
+    }
+    return nil
+}
+
+var stringArrayUniversal = ["кот","Собака","Курица"]
+
+if let foundIndexUniversal = findIndexUniversal(ofStrinf: "Собака", in: stringArrayUniversal){
+    print("Индекс \(foundIndexUniversal)")
+}
