@@ -136,3 +136,122 @@ var stringArrayUniversal = ["кот","Собака","Курица"]
 if let foundIndexUniversal = findIndexUniversal(ofStrinf: "Собака", in: stringArrayUniversal){
     print("Индекс \(foundIndexUniversal)")
 }
+
+class StreetAddres {
+    let number: String
+    let street: String
+    let unit: String?
+    
+    init(_ number: String, _ street: String, _ unit: String? = nil) {
+        self.number = number
+        self.street = street
+        self.unit = unit
+    }
+    
+}
+
+extension StreetAddres: Equatable{
+    static func == (lhs: StreetAddres, rhs:StreetAddres ) -> Bool{
+        return  lhs.number == rhs.number && lhs.street == rhs.street
+    }
+}
+
+let aStreet = StreetAddres("1780", "Nevskiy")
+let bStreet = StreetAddres("39", "Lenina")
+
+print(aStreet == bStreet)
+
+// Subscripting
+
+struct TimeTable{
+    let multiplier: Int
+    subscript(index: Int) -> Int {
+    return multiplier * index
+    }
+}
+
+let t = TimeTable(multiplier: 3)
+print("\(t[5])")
+
+
+
+struct welcome{
+    var a = "Hellou"
+    var b = "Hi"
+    var c = "Privet"
+    
+    subscript(index: Int) -> String {
+        get{
+            switch index {
+            case 0: return a
+            case 1: return b
+            case 2: return c
+            default:
+                return ""
+            }
+            
+        }
+        //newValue - переменная передаваемая
+        set{
+            switch index {
+            case 0: a = newValue
+            case 1: b = newValue
+            case 2: c = newValue
+            default: break
+            }
+        }
+    }
+    subscript(index: Int, word: String) -> String {
+        var text = self[index]
+        text += " " + word
+        return text
+    }
+    
+}
+
+var hi = welcome()
+print(hi[0])
+
+hi[0] = "Здоровеньки былы"
+print(hi[0])
+
+print(hi[0, "WWDC"])
+
+//  Замыкания
+
+let hello = {print("Hello")}
+
+hello()
+let arrayValue = [3,4,5,12,321,443,5551,354,7885]
+
+func filterA(array: [Int], function:(Int)->Bool) -> [Int]{
+    var newFilterArray = [Int]()
+    for i in array {
+        if function(i){
+            newFilterArray.append(i)
+        }
+    }
+    return newFilterArray
+}
+
+func compare(i: Int) -> Bool {
+    return i % 2 == 1
+}
+
+filterA(array: arrayValue, function: compare)
+
+filterA(array: arrayValue, function: {(i: Int) -> Bool in return i % 2 == 0})
+
+let names = ["Александр","Иван","Сергей"]
+
+func backward(_ s1: String, _ s2: String) -> Bool{
+    return s1 > s2
+}
+var reverseNames = names.sorted(by: backward)
+print(reverseNames)
+
+reverseNames = names.sorted(by: {(s1: String, s2: String) -> Bool in return s1 > s2})
+reverseNames = names.sorted(by: {s1, s2 in return s1 > s2})
+print(reverseNames)
+reverseNames = names.sorted {$0 < $1}
+print(reverseNames)
