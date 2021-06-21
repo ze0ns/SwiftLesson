@@ -11,7 +11,7 @@ class Snake: SKShapeNode {
     // Тело нашей змеи будет массивом
     var body = [SnakeBodyPart]()
     let moveSpeed: CGFloat = 125.0
-    let angle: CGFloat = 0.0
+    var angle: CGFloat = 0.0
     
     //Создали голову нашей змейки, добавили её первым объектом в массив и вывели на сцену
     convenience init(atPoint point: CGPoint){

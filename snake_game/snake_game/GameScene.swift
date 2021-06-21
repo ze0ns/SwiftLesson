@@ -8,6 +8,15 @@
 import SpriteKit
 import GameplayKit
 
+// Категории нужны нам для разбиение всех объектов на группы. МОжно указывать какие категории могут взаимодействовать и какие нет
+//Создадим категории наших объектов и зададим их значение в битовом формате
+struct CollisionCategories {
+    static let Snake: UInt32 = 0x1 << 0 //Число 0001
+    static let SnakeHead: UInt32 = 0x1 << 1 //Число 0010
+    static let Apple: UInt32 = 0x1 << 2 //Число 0100
+    static let EdgeBody: UInt32 = 0x1 << 3 //Число 1000
+}
+
 class GameScene: SKScene {
     //помещаем змейку, и вызываем её только когда надо 
     var snake: Snake?
@@ -54,6 +63,15 @@ class GameScene: SKScene {
         snake = Snake(atPoint: CGPoint(x: view.scene!.frame.midX, y: view.scene!.frame.midY))
         self.addChild(snake!)
         
+        //Указываем что сцена является делегатом столкновения
+        self.physicsWorld.contactDelegate = self
+        
+        self.physicsBody?.categoryBitMask = CollisionCategories.EdgeBody
+        
+        //Указываем с кем она может сталкиваться (со змеёй и с головой змеи)
+        self.physicsBody?.collisionBitMask = CollisionCategories.Snake | CollisionCategories.SnakeHead
+        
+        
     }
     
     
@@ -82,6 +100,13 @@ class GameScene: SKScene {
                 return
             }
             touchNode.fillColor = .gray
+            
+            // Добавляем вызов методов поворота змейки при нажатии на наши кнопки
+            if touchNode.name == "counterClockWiseButton" {
+                snake!.moveCounterClockwise()
+            } else if touchNode.name == "ClockWiseButton"{
+                snake!.moveClockwise()
+            }
         }
     
     }
@@ -106,3 +131,29 @@ class GameScene: SKScene {
     }
     
 }
+
+//Расширим функционал нашей сцены. Добавляем контакт делегате
+extension GameScene: SKPhysicsContactDelegate{
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        let bodyes = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        let collisionObject = bodyes - CollisionCategories.SnakeHead
+        
+        switch collisionObject {
+        case CollisionCategories.Apple:
+            //данной проверкой мы узнаели какой из соприкоснувшихся объектов является яблоком
+            let apple = contact.bodyA.node is Apple ? contact.bodyA.node : contact.bodyB.node
+            
+            //Увеличили туловище, удалили яблоко со сцены, рандомно создали яблоко на сцене
+            snake?.addBodyPart()
+            apple?.removeFromParent()
+            crateApple()
+        case CollisionCategories.EdgeBody:
+            break
+            //Домашнее задание
+        default:
+            break
+        }
+    }
+}
+

@@ -21,6 +21,13 @@ class Apple: SKShapeNode{
         lineWidth = 5
         self.position = position
         
+        //Добавим физицеское тело для столкновения
+        self.physicsBody = SKPhysicsBody(circleOfRadius: 10.0, center: CGPoint(x: 5, y: 5))
+       
+        self.physicsBody?.categoryBitMask = CollisionCategories.Apple
+        
+        
+        
     }
     
     
