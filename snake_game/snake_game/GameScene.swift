@@ -9,6 +9,9 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
+    //помещаем змейку, и вызываем её только когда надо 
+    var snake: Snake?
+
     //Метод вызывается в момент запуска сцены. Преднанзанчен для создания первоначального состояния  для добовления необходимых объектов на старте
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black //Устанавливаем фон
@@ -42,8 +45,14 @@ class GameScene: SKScene {
         ClockWiseButton.lineWidth = 10
         ClockWiseButton.name = "ClockWiseButton"
         
+        //Предаем(создаем) наши кнопки на нашу сцену
         self.addChild(counterClockWiseButton)
         self.addChild(ClockWiseButton)
+        
+        //Вызываем метод создания яблока
+        crateApple()
+        snake = Snake(atPoint: CGPoint(x: view.scene!.frame.midX, y: view.scene!.frame.midY))
+        self.addChild(snake!)
         
     }
     
@@ -51,9 +60,10 @@ class GameScene: SKScene {
     //Метод отрабатывает нажатия на экран
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
+        //Ищем куда было нажатие, и если было нажатие - нашу кнопку красим её в зеленый цвет
         for touch in touches{
             let touchLocation = touch.location(in: self)
-            
+            //метод atPoint - отслеживает , где произшло нажание. И объект соответствует классу SKShapeNode
             guard let touchNode = self.atPoint(touchLocation) as? SKShapeNode, touchNode.name == "counterClockWiseButton" || touchNode.name == "ClockWiseButton" else {
                 return
             }
@@ -84,5 +94,15 @@ class GameScene: SKScene {
     //Обновление сцены
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        snake!.move()
     }
+    //Создаем наше яблоко и произвольно помещаем его на сцену
+    func crateApple(){
+        let randX = CGFloat(arc4random_uniform(UInt32(view!.scene!.frame.maxX - 10)))
+        let randY = CGFloat(arc4random_uniform(UInt32(view!.scene!.frame.maxY - 10)))
+        
+        let apple = Apple(position: CGPoint(x: randX, y: randY))
+        self.addChild(apple)
+    }
+    
 }
