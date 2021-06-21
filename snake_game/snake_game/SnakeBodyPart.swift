@@ -20,6 +20,12 @@ class SnakeBodyPart: SKShapeNode {
         lineWidth = 5
         self.position = point
         
+        //Говорим, что туловище у нас физицеский объект. Создаем его и указываем,ч то он динамический
+        self.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(diametr - 4), center: CGPoint(x: 5, y: 5))
+        self.physicsBody?.isDynamic = true
+        
+        self.physicsBody?.categoryBitMask = CollisionCategories.Snake
+        self.physicsBody?.contactTestBitMask = CollisionCategories.EdgeBody | CollisionCategories.Apple
     }
     
     required init?(coder aDecoder: NSCoder) {
