@@ -4,7 +4,7 @@
 //
 //  Created by zeons on 20.06.2021.
 //
-
+import UIKit
 import SpriteKit
 import GameplayKit
 
@@ -132,9 +132,13 @@ class GameScene: SKScene {
     
 }
 
+
+
+
 //Расширим функционал нашей сцены. Добавляем контакт делегате
-extension GameScene: SKPhysicsContactDelegate{
-    func didBegin(_ contact: SKPhysicsContact) {
+extension GameScene: SKPhysicsContactDelegate {
+    
+        func didBegin(_ contact: SKPhysicsContact) {
         
         let bodyes = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         let collisionObject = bodyes - CollisionCategories.SnakeHead
@@ -148,7 +152,13 @@ extension GameScene: SKPhysicsContactDelegate{
             snake?.addBodyPart()
             apple?.removeFromParent()
             crateApple()
+            
         case CollisionCategories.EdgeBody:
+           
+            let alert = UIAlertController(title: "Error", message: "Enter data in Text fields", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            alert.present(alert, animated: true, completion: nil)
+            
             break
             //Домашнее задание
         default:
