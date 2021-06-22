@@ -134,6 +134,15 @@ class GameScene: SKScene {
 
 
 
+extension UIAlertController {
+
+    func presentInOwnWindow(animated: Bool, completion: (() -> Void)?) {
+        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+        alertWindow.rootViewController = UIViewController()
+        alertWindow.makeKeyAndVisible()
+        alertWindow.rootViewController?.present(self, animated: animated, completion: completion)
+    }
+}
 
 //Расширим функционал нашей сцены. Добавляем контакт делегате
 extension GameScene: SKPhysicsContactDelegate {
@@ -155,11 +164,9 @@ extension GameScene: SKPhysicsContactDelegate {
             
         case CollisionCategories.EdgeBody:
            
-            let alert = UIAlertController(title: "Error", message: "Enter data in Text fields", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            alert.present(alert, animated: true, completion: nil)
-            
-            break
+            let alert = UIAlertController(title: "Error", message: "Enter data in Text fields", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
+            alert.presentInOwnWindow(animated: true, completion: {print("completed")})
             //Домашнее задание
         default:
             break
