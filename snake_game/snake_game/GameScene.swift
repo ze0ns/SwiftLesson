@@ -165,11 +165,13 @@ extension GameScene: SKPhysicsContactDelegate {
         case CollisionCategories.EdgeBody:
            
             let alert = UIAlertController(title: "Error", message: "Enter data in Text fields", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
-            alert.presentInOwnWindow(animated: true, completion: {print("completed")})
-            //Домашнее задание
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action) -> Void in print("OK button tapped")}))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action) -> Void in print("Cancel button tapped")}))
+            alert.presentInOwnWindow(animated: true, completion: {print("Произошло столкновение")})
+            
+            
         default:
-            break
+            print("НИчего не произашло")
         }
     }
 }
