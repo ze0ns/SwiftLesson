@@ -16,10 +16,14 @@ struct CollisionCategories {
     static let Apple: UInt32 = 0x1 << 2 //Число 0100
     static let EdgeBody: UInt32 = 0x1 << 3 //Число 1000
 }
+var status = false // отслеживаение статуса столкновения
 
 class GameScene: SKScene {
     //помещаем змейку, и вызываем её только когда надо 
     var snake: Snake?
+    var status = false
+
+    
 
     //Метод вызывается в момент запуска сцены. Преднанзанчен для создания первоначального состояния  для добовления необходимых объектов на старте
     override func didMove(to view: SKView) {
@@ -54,13 +58,15 @@ class GameScene: SKScene {
         ClockWiseButton.lineWidth = 10
         ClockWiseButton.name = "ClockWiseButton"
         
+
+        
         //Предаем(создаем) наши кнопки на нашу сцену
         self.addChild(counterClockWiseButton)
         self.addChild(ClockWiseButton)
         
         //Вызываем метод создания яблока
         crateApple()
-        snake = Snake(atPoint: CGPoint(x: view.scene!.frame.midX, y: view.scene!.frame.midY))
+        snake = Snake(atPoint: CGPoint(x: view.scene!.frame.midX, y: view.scene!.frame.midY + 80))
         self.addChild(snake!)
         
         //Указываем что сцена является делегатом столкновения
@@ -117,61 +123,59 @@ class GameScene: SKScene {
     }
     
     //Обновление сцены
+    
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        snake!.move()
+       snake!.move()
+//        guard status else{return}
+//        isPaused = true
+//        alertWindow()
     }
+
+    
     //Создаем наше яблоко и произвольно помещаем его на сцену
     func crateApple(){
         let randX = CGFloat(arc4random_uniform(UInt32(view!.scene!.frame.maxX - 10)))
         let randY = CGFloat(arc4random_uniform(UInt32(view!.scene!.frame.maxY - 10)))
         
-        let apple = Apple(position: CGPoint(x: randX, y: randY))
+        let apple = Apple(position: CGPoint(x: randX, y: randY ))
         self.addChild(apple)
     }
-    
-}
 
-
-
-extension UIAlertController {
-
-    func presentInOwnWindow(animated: Bool, completion: (() -> Void)?) {
-        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-        alertWindow.rootViewController = UIViewController()
-        alertWindow.makeKeyAndVisible()
-        alertWindow.rootViewController?.present(self, animated: animated, completion: completion)
+    //Метод стопИгра
+    func stopGame(){
+        self.view?.scene?.removeAllActions()
+        self.view?.scene?.isPaused = true
+        let stop = GameOverLabel(position: CGPoint(x: (view?.scene!.frame.midX)! , y: (view?.scene!.frame.midY)!))
+        self.addChild(stop)
+   
     }
+
+    
 }
 
 //Расширим функционал нашей сцены. Добавляем контакт делегате
 extension GameScene: SKPhysicsContactDelegate {
-    
+        
         func didBegin(_ contact: SKPhysicsContact) {
         
-        let bodyes = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        let collisionObject = bodyes - CollisionCategories.SnakeHead
-        
-        switch collisionObject {
-        case CollisionCategories.Apple:
-            //данной проверкой мы узнаели какой из соприкоснувшихся объектов является яблоком
-            let apple = contact.bodyA.node is Apple ? contact.bodyA.node : contact.bodyB.node
+            let bodyes = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+            let collisionObject = bodyes - CollisionCategories.SnakeHead
             
-            //Увеличили туловище, удалили яблоко со сцены, рандомно создали яблоко на сцене
-            snake?.addBodyPart()
-            apple?.removeFromParent()
-            crateApple()
-            
-        case CollisionCategories.EdgeBody:
-           
-            let alert = UIAlertController(title: "Error", message: "Enter data in Text fields", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action) -> Void in print("OK button tapped")}))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action) -> Void in print("Cancel button tapped")}))
-            alert.presentInOwnWindow(animated: true, completion: {print("Произошло столкновение")})
-            
-            
-        default:
-            print("НИчего не произашло")
+            switch collisionObject {
+            case CollisionCategories.Apple:
+                //данной проверкой мы узнаели какой из соприкоснувшихся объектов является яблоком
+                let apple = contact.bodyA.node is Apple ? contact.bodyA.node : contact.bodyB.node
+                
+                //Увеличили туловище, удалили яблоко со сцены, рандомно создали яблоко на сцене
+                snake?.addBodyPart()
+                apple?.removeFromParent()
+                crateApple()
+                
+            case CollisionCategories.EdgeBody:
+                stopGame()
+
+            default:
+                break
         }
     }
 }
